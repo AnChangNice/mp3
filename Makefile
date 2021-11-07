@@ -1,10 +1,9 @@
 
-
-
-
+# 编译输出目录
+BUILD_PATH = build
 
 # 最终目标
-TARGET_ELF = main.elf
+TARGET_ELF = $(BUILD_PATH)/main.elf
 
 # 编译器选择
 CC = arm-none-eabi-gcc
@@ -56,29 +55,33 @@ LINKER_FILE = Drivers/CMSIS/Device/Source/gcc/STM32H750XBHX_FLASH.ld
 
 LINKER_FLAGS = -Wl,--gc-sections -Wl,-T$(LINKER_FILE)
 
-
 # 编译
-CXX_OBJS = $(CXX_FILES:.c=.o)
+CXX_OBJS_FILES = $(CXX_FILES:.c=.o)
+CXX_OBJS = $(addprefix $(BUILD_PATH)/, ${CXX_OBJS_FILES})
 
-ASM_OBJS = $(ASM_FILE:.s=.o)
+ASM_OBJS_FILES = $(ASM_FILE:.s=.o)
+ASM_OBJS = $(addprefix $(BUILD_PATH)/, ${ASM_OBJS_FILES})
 
 ALL_OBJS = $(CXX_OBJS) $(ASM_OBJS) 
 
+.PHONY: all
 all: $(TARGET_ELF)
 
-$(CXX_OBJS): %.o:%.c
+$(CXX_OBJS): $(BUILD_PATH)/%.o:%.c
 	@echo Compile $<
-	@$(CC) $(CC_FLAGS) $(CC_INCLUDE) -c $^ -o $@
+	@mkdir -p $(dir $@)
+	@$(CC) $(CC_FLAGS) $(CC_INCLUDE) -c $< -o $@
 
-$(ASM_OBJS): %.o:%.s
+$(ASM_OBJS): $(BUILD_PATH)/%.o:%.s
 	@echo Compile $<
+	@mkdir -p $(dir $@)
 	@$(CC) $(ASM_FLAGS) $(CC_INCLUDE) -c $< -o $@
 
 # 链接
 %.elf: $(ALL_OBJS)
 	@echo Link $@
-	@$(CC) $(CC_FLAGS) $(LINKER_FLAGS) $(ALL_OBJS) -o $@ -Wl,-Map=main.map
+	@$(CC) $(CC_FLAGS) $(LINKER_FLAGS) $(ALL_OBJS) -o $@ -Wl,-Map=$(BUILD_PATH)/main.map
 
-
+.PHONY: clean
 clean:
-	rm -f $(ALL_OBJS) $(TARGET_ELF) main.map
+	rm -r $(BUILD_PATH)
