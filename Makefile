@@ -59,23 +59,36 @@ LINKER_FLAGS = -Wl,--gc-sections -Wl,-T$(LINKER_FILE)
 CXX_OBJS_FILES = $(CXX_FILES:.c=.o)
 CXX_OBJS = $(addprefix $(BUILD_PATH)/, ${CXX_OBJS_FILES})
 
+DEPENDENCYS = $(CXX_OBJS:.o=.d)
+
 ASM_OBJS_FILES = $(ASM_FILE:.s=.o)
 ASM_OBJS = $(addprefix $(BUILD_PATH)/, ${ASM_OBJS_FILES})
+
 
 ALL_OBJS = $(CXX_OBJS) $(ASM_OBJS) 
 
 .PHONY: all
 all: $(TARGET_ELF)
 
+# 由 *.c 生成 *.o 的命令
 $(CXX_OBJS): $(BUILD_PATH)/%.o:%.c
 	@echo Compile $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDE) -c $< -o $@
 
+# 由 *.s 生成 *.o 的命令
 $(ASM_OBJS): $(BUILD_PATH)/%.o:%.s
 	@echo Compile $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(ASM_FLAGS) $(CC_INCLUDE) -c $< -o $@
+
+# 生成 *.d 的依赖文件，用于追踪 *.c 依赖的 *.h 改动
+$(DEPENDENCYS): $(BUILD_PATH)/%.d:%.c
+	@echo Generate depandency for $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(CC_FLAGS) $(CC_INCLUDE) -MM $< | sed "s/$(subst /,\/,$(basename $(notdir $@))).o/$(subst /,\/,$(basename $@)).o $(subst /,\/,$(basename $@)).d/g" > $@
+
+include $(DEPENDENCYS)
 
 # 链接
 %.elf: $(ALL_OBJS)
