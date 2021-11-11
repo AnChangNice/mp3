@@ -16,6 +16,7 @@ CC_OPTIONS  = \
 
 CC_DEFINE_LISTS = \
 	USE_HAL_DRIVER\
+	USE_FULL_LL_DRIVER\
 	STM32H750xx
 
 #自动给所有的宏定义加前缀
@@ -29,16 +30,17 @@ CC_FLAGS = \
 CC_HEADER_PATH = \
 	Drivers/CMSIS/Include\
 	Drivers/CMSIS/Device/Include\
-	Drivers/STM32H7xx_HAL_Driver\
 	Drivers/STM32H7xx_HAL_Driver/Inc\
-	Drivers/STM32H7xx_HAL_Driver/Inc/Legacy
+	Drivers/STM32H7xx_HAL_Driver/Inc/Legacy\
+	Drivers/BSP/inc\
+	APP
 
 #自动给所有的头文件路径加前缀
 CC_INCLUDE = $(addprefix -I, ${CC_HEADER_PATH})
 
 # 源文件
 ASM_FILE = \
-	Drivers/CMSIS/Device/Source/gcc/startup_stm32h750xx.s
+	APP/Startup/startup_stm32h750xx.s
 
 CXX_FILES = \
 	Drivers/CMSIS/Device/Source/system_stm32h7xx.c\
@@ -48,10 +50,16 @@ CXX_FILES = \
 	Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c\
 	Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c\
 	Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c\
-	APP/main.c
+	Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c\
+	Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c\
+	Drivers/BSP/src/led.c\
+	Drivers/BSP/src/key.c\
+	APP/main.c\
+	APP/stm32h7xx_hal_msp.c\
+	APP/stm32h7xx_it.c
 
 # 链接脚本
-LINKER_FILE = Drivers/CMSIS/Device/Source/gcc/STM32H750XBHX_FLASH.ld
+LINKER_FILE = APP/Linker/STM32H750XBHX_FLASH.ld
 
 LINKER_FLAGS = -Wl,--gc-sections -Wl,-T$(LINKER_FILE)
 
