@@ -1,0 +1,371 @@
+/*
+ * wm8988_regs.h
+ *
+ *  Created on: Oct 12, 2021
+ *      Author: AnChangNice
+ */
+
+#ifndef WM8988_REGS_H_
+#define WM8988_REGS_H_
+
+
+#include <stdint.h>
+
+/* Macros for construct the register struct.  */
+#define WM8988_REG_DEF(reg_name, ...) \
+    typedef union {                   \
+      struct {                        \
+        __VA_ARGS__                   \
+      } bits;                         \
+      uint16_t val;                   \
+    } wm8988_##reg_name##_t           \
+
+#define WM8988_REG_ADD(reg_name)  wm8988_##reg_name##_t reg_name
+
+#define WM8988_REG_DEF_BITS(name, bits)   uint16_t name : bits
+
+/* Define the struct for each register.  */
+
+//Left Input volume
+WM8988_REG_DEF(
+    R0,
+    WM8988_REG_DEF_BITS(LINVOL,  6);
+    WM8988_REG_DEF_BITS(LZCEN,   1);
+    WM8988_REG_DEF_BITS(LINMUTE, 1);
+    WM8988_REG_DEF_BITS(LIVU,    1);
+    );
+
+//Right Input volume
+WM8988_REG_DEF(
+    R1,
+    WM8988_REG_DEF_BITS(RINVOL,  6);
+    WM8988_REG_DEF_BITS(RZCEN,   1);
+    WM8988_REG_DEF_BITS(RINMUTE, 1);
+    WM8988_REG_DEF_BITS(RIVU,    1);
+    );
+
+//LOUT1 volume
+WM8988_REG_DEF(
+    R2,
+    WM8988_REG_DEF_BITS(LOUT1VOL, 7);
+    WM8988_REG_DEF_BITS(LO1ZC,    1);
+    WM8988_REG_DEF_BITS(LO1VU,    1);
+    );
+
+//ROUT1 volume
+WM8988_REG_DEF(
+    R3,
+    WM8988_REG_DEF_BITS(ROUT1VOL, 7);
+    WM8988_REG_DEF_BITS(RO1ZC,    1);
+    WM8988_REG_DEF_BITS(RO1VU,    1);
+    );
+
+//ADC & DAC Control
+WM8988_REG_DEF(
+    R5,
+    WM8988_REG_DEF_BITS(ADCHPD,  1);
+    WM8988_REG_DEF_BITS(DEEMP,   2);
+    WM8988_REG_DEF_BITS(DACMU,   1);
+    WM8988_REG_DEF_BITS(HPOR,    1);
+    WM8988_REG_DEF_BITS(ADCPOL,  2);
+    WM8988_REG_DEF_BITS(DACDIV2, 1);
+    WM8988_REG_DEF_BITS(ADCDIV2, 1);
+    );
+
+//Audio Interface
+WM8988_REG_DEF(
+    R7,
+    WM8988_REG_DEF_BITS(FORMAT,  2);
+    WM8988_REG_DEF_BITS(WL,      2);
+    WM8988_REG_DEF_BITS(LRP,     1);
+    WM8988_REG_DEF_BITS(LRSWAP,  1);
+    WM8988_REG_DEF_BITS(MS,      1);
+    WM8988_REG_DEF_BITS(BCLKINV, 1);
+    );
+
+//Sample rate
+WM8988_REG_DEF(
+    R8,
+    WM8988_REG_DEF_BITS(USB,     1);
+    WM8988_REG_DEF_BITS(SR,      5);
+    WM8988_REG_DEF_BITS(CLKDIV2, 1);
+    WM8988_REG_DEF_BITS(BCM,     2);
+    );
+
+//Left DAC volume
+WM8988_REG_DEF(
+    R10,
+    WM8988_REG_DEF_BITS(LDACVOL, 8);
+    WM8988_REG_DEF_BITS(LDVU,    1);
+    );
+
+//Right DAC volume
+WM8988_REG_DEF(
+    R11,
+    WM8988_REG_DEF_BITS(RDACVOL, 8);
+    WM8988_REG_DEF_BITS(RDVU,    1);
+    );
+
+//Bass control
+WM8988_REG_DEF(
+    R12,
+    WM8988_REG_DEF_BITS(BASS, 4);
+    WM8988_REG_DEF_BITS(REV,  2);
+    WM8988_REG_DEF_BITS(BC,   1);
+    WM8988_REG_DEF_BITS(BB,   1);
+    );
+
+//Treble control
+WM8988_REG_DEF(
+    R13,
+    WM8988_REG_DEF_BITS(TRBL, 4);
+    WM8988_REG_DEF_BITS(REV,  2);
+    WM8988_REG_DEF_BITS(TC,   1);
+    );
+
+//Reset
+WM8988_REG_DEF(
+    R15,
+    WM8988_REG_DEF_BITS(RESET, 8);
+    );
+
+//3D control
+WM8988_REG_DEF(
+    R16,
+    WM8988_REG_DEF_BITS(_3DEN,    1);
+    WM8988_REG_DEF_BITS(_3DDEPTH, 4);
+    WM8988_REG_DEF_BITS(_3DLC,    1);
+    WM8988_REG_DEF_BITS(_3DUC,    1);
+    WM8988_REG_DEF_BITS(MODE3D,   1);
+    );
+
+//ALC1
+WM8988_REG_DEF(
+    R17,
+    WM8988_REG_DEF_BITS(ALCL,    4);
+    WM8988_REG_DEF_BITS(MAXGAIN, 3);
+    WM8988_REG_DEF_BITS(ALCSEL,  2);
+    );
+
+//ALC2
+WM8988_REG_DEF(
+    R18,
+    WM8988_REG_DEF_BITS(HLD,   4);
+    WM8988_REG_DEF_BITS(REV,   3);
+    WM8988_REG_DEF_BITS(ALCZC, 1);
+    );
+
+//ALC3
+WM8988_REG_DEF(
+    R19,
+    WM8988_REG_DEF_BITS(ATK,   4);
+    WM8988_REG_DEF_BITS(DCY,   4);
+    );
+
+//Noise Gate
+WM8988_REG_DEF(
+    R20,
+    WM8988_REG_DEF_BITS(NGAT, 1);
+    WM8988_REG_DEF_BITS(NGG,  2);
+    WM8988_REG_DEF_BITS(NGTH, 5);
+    );
+
+//Left ADC volume
+WM8988_REG_DEF(
+    R21,
+    WM8988_REG_DEF_BITS(LADCVOL, 8);
+    WM8988_REG_DEF_BITS(LAVU,    1);
+    );
+
+//Right ADC volume
+WM8988_REG_DEF(
+    R22,
+    WM8988_REG_DEF_BITS(RADCVOL, 8);
+    WM8988_REG_DEF_BITS(RAVU,    1);
+    );
+
+//Additional control(1)
+WM8988_REG_DEF(
+    R23,
+    WM8988_REG_DEF_BITS(TOEN,     1);
+    WM8988_REG_DEF_BITS(DACINV,   1);
+    WM8988_REG_DEF_BITS(DATSEL,   2);
+    WM8988_REG_DEF_BITS(DMONOMIX, 2);
+    WM8988_REG_DEF_BITS(VSEL,     2);
+    WM8988_REG_DEF_BITS(TSDEN,    1);
+    );
+
+//Additional control(2)
+WM8988_REG_DEF(
+    R24,
+    WM8988_REG_DEF_BITS(DACOSR,  1);
+    WM8988_REG_DEF_BITS(ADCOSR,  1);
+    WM8988_REG_DEF_BITS(LRCM,    1);
+    WM8988_REG_DEF_BITS(TRI,     1);
+    WM8988_REG_DEF_BITS(REV,     3);
+    WM8988_REG_DEF_BITS(HPCOMEN, 1);
+    WM8988_REG_DEF_BITS(LCOMEN,  1);
+    );
+
+//Pwr Mgmt (1)
+WM8988_REG_DEF(
+    R25,
+    WM8988_REG_DEF_BITS(DIGENB,  1);
+    WM8988_REG_DEF_BITS(REV,     1);
+    WM8988_REG_DEF_BITS(ADCR,    1);
+    WM8988_REG_DEF_BITS(ADCL,    1);
+    WM8988_REG_DEF_BITS(AINR,    1);
+    WM8988_REG_DEF_BITS(AINL,    1);
+    WM8988_REG_DEF_BITS(VREF,    1);
+    WM8988_REG_DEF_BITS(VMIDSEL, 2);
+    );
+
+//Pwr Mgmt (2)
+WM8988_REG_DEF(
+    R26,
+    WM8988_REG_DEF_BITS(REV,   3);
+    WM8988_REG_DEF_BITS(ROUT2, 1);
+    WM8988_REG_DEF_BITS(LOUT2, 1);
+    WM8988_REG_DEF_BITS(ROUT1, 1);
+    WM8988_REG_DEF_BITS(LOUT1, 1);
+    WM8988_REG_DEF_BITS(DACR,  1);
+    WM8988_REG_DEF_BITS(DACL,  2);
+    );
+
+//Additional Control (3)
+WM8988_REG_DEF(
+    R27,
+    WM8988_REG_DEF_BITS(REV,     5);
+    WM8988_REG_DEF_BITS(HPFLREN, 1);
+    WM8988_REG_DEF_BITS(VROI,    1);
+    );
+
+//ADC input mode
+WM8988_REG_DEF(
+    R31,
+    WM8988_REG_DEF_BITS(REV,     4);
+    WM8988_REG_DEF_BITS(LDCM,    1);
+    WM8988_REG_DEF_BITS(RDCM,    1);
+    WM8988_REG_DEF_BITS(MONOMIX, 2);
+    WM8988_REG_DEF_BITS(DS,      1);
+    );
+
+//ADCL signal path
+WM8988_REG_DEF(
+    R32,
+    WM8988_REG_DEF_BITS(REV,       4);
+    WM8988_REG_DEF_BITS(LMICBOOST, 2);
+    WM8988_REG_DEF_BITS(LINSEL,    2);
+    );
+
+
+
+//ADCR signal path
+WM8988_REG_DEF(
+    R33,
+    WM8988_REG_DEF_BITS(REV,       4);
+    WM8988_REG_DEF_BITS(RMICBOOST, 2);
+    WM8988_REG_DEF_BITS(RINSEL,    2);
+    );
+
+//Left out Mix (1)
+WM8988_REG_DEF(
+    R34,
+    WM8988_REG_DEF_BITS(LMIXSEL,  3);
+    WM8988_REG_DEF_BITS(REV,      1);
+    WM8988_REG_DEF_BITS(LI2LOVOL, 3);
+    WM8988_REG_DEF_BITS(LI2LO,    1);
+    WM8988_REG_DEF_BITS(LD2LO,    1);
+    );
+
+//Left out Mix (2)
+WM8988_REG_DEF(
+    R35,
+    WM8988_REG_DEF_BITS(REV,      4);
+    WM8988_REG_DEF_BITS(RI2LOVOL, 3);
+    WM8988_REG_DEF_BITS(RI2LO,    1);
+    WM8988_REG_DEF_BITS(RD2LO,    1);
+    );
+
+//Right out Mix (1)
+WM8988_REG_DEF(
+    R36,
+    WM8988_REG_DEF_BITS(RMIXSEL,  3);
+    WM8988_REG_DEF_BITS(REV,      1);
+    WM8988_REG_DEF_BITS(LI2ROVOL, 3);
+    WM8988_REG_DEF_BITS(LI2RO,    1);
+    WM8988_REG_DEF_BITS(LD2RO,    1);
+    );
+
+//Right out Mix (2)
+WM8988_REG_DEF(
+    R37,
+    WM8988_REG_DEF_BITS(REV,      4);
+    WM8988_REG_DEF_BITS(RI2ROVOL, 3);
+    WM8988_REG_DEF_BITS(RI2RO,    1);
+    WM8988_REG_DEF_BITS(RD2RO,    1);
+    );
+
+//LOUT2 volume
+WM8988_REG_DEF(
+    R40,
+    WM8988_REG_DEF_BITS(LOUT2VOL, 7);
+    WM8988_REG_DEF_BITS(LO2ZC,    1);
+    WM8988_REG_DEF_BITS(LO2VU,    1);
+    );
+
+//ROUT2 volume
+WM8988_REG_DEF(
+    R41,
+    WM8988_REG_DEF_BITS(ROUT2VOL, 7);
+    WM8988_REG_DEF_BITS(RO2ZC,    1);
+    WM8988_REG_DEF_BITS(RO2VU,    1);
+    );
+
+//Low Power Playback
+WM8988_REG_DEF(
+    R67,
+    WM8988_REG_DEF_BITS(REV,         3);
+    WM8988_REG_DEF_BITS(DACMIX_BIAS, 1);
+    );
+
+/* Combin all registers in one struct. */
+typedef struct _WM8988_REG{
+    WM8988_REG_ADD(R0);
+    WM8988_REG_ADD(R1);
+    WM8988_REG_ADD(R2);
+    WM8988_REG_ADD(R3);
+    WM8988_REG_ADD(R5);
+    WM8988_REG_ADD(R7);
+    WM8988_REG_ADD(R8);
+    WM8988_REG_ADD(R10);
+    WM8988_REG_ADD(R11);
+    WM8988_REG_ADD(R12);
+    WM8988_REG_ADD(R13);
+    WM8988_REG_ADD(R15);
+    WM8988_REG_ADD(R16);
+    WM8988_REG_ADD(R17);
+    WM8988_REG_ADD(R18);
+    WM8988_REG_ADD(R19);
+    WM8988_REG_ADD(R20);
+    WM8988_REG_ADD(R21);
+    WM8988_REG_ADD(R22);
+    WM8988_REG_ADD(R23);
+    WM8988_REG_ADD(R24);
+    WM8988_REG_ADD(R25);
+    WM8988_REG_ADD(R26);
+    WM8988_REG_ADD(R27);
+    WM8988_REG_ADD(R31);
+    WM8988_REG_ADD(R32);
+    WM8988_REG_ADD(R33);
+    WM8988_REG_ADD(R34);
+    WM8988_REG_ADD(R35);
+    WM8988_REG_ADD(R36);
+    WM8988_REG_ADD(R37);
+    WM8988_REG_ADD(R40);
+    WM8988_REG_ADD(R41);
+    WM8988_REG_ADD(R67);
+} WM8988_REG_t;
+
+
+#endif /* WM8988_REGS_H_ */
