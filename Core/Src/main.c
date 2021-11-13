@@ -90,7 +90,6 @@ int main(void)
   MX_UART4_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Transmit(&huart4, "Hello world!\n", sizeof("Hello world!\n"), HAL_MAX_DELAY);
 
   /* USER CODE END 2 */
 
