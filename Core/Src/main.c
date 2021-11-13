@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "i2c.h"
 #include "rtc.h"
 #include "usart.h"
 #include "gpio.h"
@@ -91,6 +92,7 @@ int main(void)
   MX_GPIO_Init();
   MX_UART4_Init();
   MX_RTC_Init();
+  MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
