@@ -206,7 +206,16 @@ $(BUILD_DIR):
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
-  
+
+#######################################
+# info
+#######################################
+hexinfo:
+	bincopy info $(BUILD_DIR)/$(TARGET).hex
+
+hexdump:
+	bincopy as_hexdump $(BUILD_DIR)/mp3.hex > $(BUILD_DIR)/$(TARGET)_hexdump.txt
+
 #######################################
 # dependencies
 #######################################
