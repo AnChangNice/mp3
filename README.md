@@ -15,3 +15,11 @@ make
 
 make clean
 
+make -jn        #Fast compile with n jobs at once.
+
+make OPT=-Ox    #Optiminization level setting.
+
+make hexinfo    #Output xxx.hex regins size and address.
+
+make hexdump    #Dump xxx.hex to xxx_hexdump.txt for human readable format.
+
