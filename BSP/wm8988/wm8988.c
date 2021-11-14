@@ -6,6 +6,7 @@
  */
 
  #include "wm8988.h"
+ #include <string.h>
 
  /*
   * Internal Macros
