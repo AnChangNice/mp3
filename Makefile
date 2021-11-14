@@ -231,6 +231,12 @@ hexinfo:
 hexdump:
 	bincopy as_hexdump $(BUILD_DIR)/mp3.hex > $(BUILD_DIR)/$(TARGET)_hexdump.txt
 
+sections:
+	arm-none-eabi-size $(BUILD_DIR)/$(TARGET).elf -A -x
+
+size:
+	@arm-none-eabi-size $(OBJECTS) -t
+
 #######################################
 # dependencies
 #######################################
