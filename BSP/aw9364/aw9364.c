@@ -1,4 +1,4 @@
-#include "lcd_backlight.h"
+#include "aw9364.h"
 #include "main.h"
 
 #define LCD_BL_HIGH() HAL_GPIO_WritePin(LCD_BL_GPIO_Port, LCD_BL_Pin, GPIO_PIN_SET)
@@ -12,12 +12,12 @@ static void delay_us(int us)
     while (delay_cycles--);
 }
 
-void lcd_backlight_on(int brightness)
+void AW9364_on(int brightness)
 {
     int positive_pulses = 17 - brightness;
 
     //Error check.
-    if ((brightness < LCD_BACKLIGHT_BRIGHTNESS_MIN) || (LCD_BACKLIGHT_BRIGHTNESS_MAX < brightness))
+    if ((brightness < AW9364_BRIGHTNESS_MIN) || (AW9364_BRIGHTNESS_MAX < brightness))
     {
         return;
     }
@@ -38,14 +38,14 @@ void lcd_backlight_on(int brightness)
     }
 }
 
-void led_backlight_adjust(int brightness)
+void AW9364_adjust(int brightness)
 {
     int tartget_positive_pulses = 17 - brightness;
     int current_positive_pulses = 17 - current_brightness;
     int pulses_num = 0;
 
     //Error check.
-    if ((brightness < LCD_BACKLIGHT_BRIGHTNESS_MIN) || (LCD_BACKLIGHT_BRIGHTNESS_MAX < brightness))
+    if ((brightness < AW9364_BRIGHTNESS_MIN) || (AW9364_BRIGHTNESS_MAX < brightness))
     {
         return;
     }
@@ -70,7 +70,7 @@ void led_backlight_adjust(int brightness)
     }
 }
 
-void led_backlight_off(void)
+void AW9364_off(void)
 {
     //Update brightness to 0.
     current_brightness = 0;

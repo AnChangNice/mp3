@@ -84,7 +84,7 @@ Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai_ex.c\ \
 BSP/wm8988/wm8988.c \
 BSP/wm8988/wm8988_sai.c \
-BSP/lcd_backlight/lcd_backlight.c \
+BSP/aw9364/aw9364.c \
 Core/Src/sdmmc.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai_ex.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c \
@@ -167,7 +167,7 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F\ \
 -IBSP/wm8988 \
--IBSP/lcd_backlight \
+-IBSP/aw9364 \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IFATFS/Target \
 -IFATFS/App \
