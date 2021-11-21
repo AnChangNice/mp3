@@ -65,10 +65,14 @@ void Error_Handler(void);
 #define LED_Red_GPIO_Port GPIOC
 #define LED_Blue_Pin GPIO_PIN_8
 #define LED_Blue_GPIO_Port GPIOI
+#define LCD_DC_Pin GPIO_PIN_7
+#define LCD_DC_GPIO_Port GPIOC
 #define LCD_BL_Pin GPIO_PIN_6
 #define LCD_BL_GPIO_Port GPIOC
 #define USER_Key_Pin GPIO_PIN_4
 #define USER_Key_GPIO_Port GPIOH
+#define LCD_RESET_Pin GPIO_PIN_3
+#define LCD_RESET_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

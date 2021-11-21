@@ -26,6 +26,7 @@
 #include "rtc.h"
 #include "sai.h"
 #include "sdmmc.h"
+#include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -101,6 +102,7 @@ int main(void)
   MX_SAI2_Init();
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
