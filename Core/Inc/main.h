@@ -61,8 +61,15 @@ void Error_Handler(void);
 #define SD_DETECT_Pin GPIO_PIN_5
 #define SD_DETECT_GPIO_Port GPIOD
 #define SD_DETECT_EXTI_IRQn EXTI9_5_IRQn
+#define CTP_INT_Pin GPIO_PIN_15
+#define CTP_INT_GPIO_Port GPIOA
+#define CTP_INT_EXTI_IRQn EXTI15_10_IRQn
+#define SCCB_SCL_Pin GPIO_PIN_15
+#define SCCB_SCL_GPIO_Port GPIOH
 #define LED_Red_Pin GPIO_PIN_15
 #define LED_Red_GPIO_Port GPIOC
+#define SCCB_SDA_Pin GPIO_PIN_13
+#define SCCB_SDA_GPIO_Port GPIOH
 #define LED_Blue_Pin GPIO_PIN_8
 #define LED_Blue_GPIO_Port GPIOI
 #define LCD_DC_Pin GPIO_PIN_7
