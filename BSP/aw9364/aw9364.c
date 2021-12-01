@@ -9,7 +9,10 @@ static int current_brightness = 0;
 static void delay_us(int us)
 {
     int delay_cycles = us * 480 / 5;
-    while (delay_cycles--);
+    while (delay_cycles--)
+    {
+        __NOP(); //This nop instruction used to prevent optimization.
+    }
 }
 
 void AW9364_on(int brightness)

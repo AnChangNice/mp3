@@ -26,7 +26,10 @@ static void set_sda_pin_mode(int mode)
 static void iic_delay_us(int us)
 {
     int cycles = us * 480 / 5;
-    while (cycles--);
+    while (cycles--)
+    {
+        __NOP(); //This nop instruction used to prevent optimization.
+    }
 }
 
 static void iic_start(void)
