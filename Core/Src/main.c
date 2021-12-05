@@ -21,6 +21,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "dma.h"
+#include "dma2d.h"
 #include "fatfs.h"
 #include "i2c.h"
 #include "rtc.h"
@@ -110,6 +111,7 @@ int main(void)
   MX_FATFS_Init();
   MX_SPI2_Init();
   MX_FMC_Init();
+  MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
   W9825G6KH6_Init(); //Init SDRAM before anyother application start.
 

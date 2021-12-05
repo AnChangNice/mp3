@@ -14,6 +14,7 @@
 
 #include "aw9364.h"
 #include "ili9488.h"
+#include "dma2d.h"
 
 /*********************
  *      DEFINES
@@ -36,6 +37,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 /**********************
  *  STATIC VARIABLES
  **********************/
+static uint8_t format_cov_buff[MY_DISP_HOR_RES * MY_DISP_VER_RES * 3] __attribute__((section(".sdram")));
 
 /**********************
  *      MACROS
@@ -105,8 +107,8 @@ void lv_port_disp_init(void)
     /*Set up the functions to access to your display*/
 
     /*Set the resolution of the display*/
-    disp_drv.hor_res = 480;
-    disp_drv.ver_res = 320;
+    disp_drv.hor_res = MY_DISP_HOR_RES;
+    disp_drv.ver_res = MY_DISP_VER_RES;
 
     /*Used to copy the buffer's content to the display*/
     disp_drv.flush_cb = disp_flush;
@@ -159,10 +161,16 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 #else
     int x = area->x1;
     int y = area->y1;
-    int w = area->x2 - area->x1;
-    int h = area->y2 - area->y1;
+    int w = area->x2 - area->x1 + 1;
+    int h = area->y2 - area->y1 + 1;
+
+    //RGB565 -> RGB888(24bits mode in SPI transfer process)
+    HAL_DMA2D_Start_IT(&hdma2d, (uint32_t)color_p, (uint32_t)format_cov_buff, w, h);
+    while(HAL_DMA2D_STATE_READY != HAL_DMA2D_GetState(&hdma2d));
+
+    //Write RGB888 data to GRAM by SPI
     ILI9488_SetWindow(x, y, w, h);
-    ILI9488_Write((uint8_t *)color_p, w * h * 3);
+    ILI9488_Write(format_cov_buff, w * h * 3);
 
 #endif
     /*IMPORTANT!!!

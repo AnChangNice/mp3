@@ -51,7 +51,7 @@ typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE END Variables */
 /* Definitions for TaskMain */
 osThreadId_t TaskMainHandle;
-uint32_t TaskMainBuffer[ 128 ];
+uint32_t TaskMainBuffer[ 1024 ];
 osStaticThreadDef_t TaskMainControlBlock;
 const osThreadAttr_t TaskMain_attributes = {
   .name = "TaskMain",
