@@ -67,6 +67,7 @@ RAM_D2 (xrw)      : ORIGIN = 0x30000000, LENGTH = 288K
 RAM_D3 (xrw)      : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 128K
+SDRAM (rw)      : ORIGIN = 0xC0000000, LENGTH = 32M
 }
 
 /* Define output sections */
@@ -177,6 +178,17 @@ SECTIONS
     . = ALIGN(8);
   } >RAM_D1
 
+  /* SDRAM */
+  .sdram :
+  {
+    . = ALIGN(4);
+    __sdram_start__ = .;
+    *(.sdram)
+    *(.sdram*)
+
+    . = ALIGN(4);
+    __sdram_end__ = .;
+  } >SDRAM
   
 
   /* Remove information from the standard libraries */
