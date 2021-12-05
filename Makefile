@@ -36,12 +36,6 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/gpio.c \
-Core/Src/rtc.c \
-Core/Src/usart.c \
-Core/Src/stm32h7xx_it.c \
-Core/Src/stm32h7xx_hal_msp.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c \
@@ -64,9 +58,16 @@ Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c \
 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c \
-Core/Src/system_stm32h7xx.c \
-Core/Src/freertos.c \
-Core/Src/stm32h7xx_hal_timebase_tim.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai_ex.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_delayblock.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd_ex.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_fmc.c \
+Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sdram.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -77,37 +78,35 @@ Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
-Core/Src/i2c.c \
-Core/Src/dma.c \
-Core/Src/sai.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai_ex.c\ \
-BSP/wm8988/wm8988.c \
-BSP/wm8988/wm8988_sai.c \
-BSP/aw9364/aw9364.c \
-BSP/ili9488/ili9488.c \
-BSP/ft6236/ft6236.c \
-BSP/w9825g6kh6/w9825g6kh6.c \
-Core/Src/sdmmc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_delayblock.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd_ex.c \
-FATFS/Target/bsp_driver_sd.c \
-FATFS/Target/sd_diskio.c \
-FATFS/App/fatfs.c \
 Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/syscall.c \
 Middlewares/Third_Party/FatFs/src/option/ccsbcs.c \
+FATFS/Target/bsp_driver_sd.c \
+FATFS/Target/sd_diskio.c \
+FATFS/App/fatfs.c \
+Core/Src/sdmmc.c \
 Core/Src/spi.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c \
 Core/Src/fmc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_fmc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sdram.c
+Core/Src/i2c.c \
+Core/Src/dma.c \
+Core/Src/sai.c \
+Core/Src/system_stm32h7xx.c \
+Core/Src/freertos.c \
+Core/Src/stm32h7xx_hal_timebase_tim.c \
+Core/Src/main.c \
+Core/Src/gpio.c \
+Core/Src/rtc.c \
+Core/Src/usart.c \
+Core/Src/stm32h7xx_it.c \
+Core/Src/stm32h7xx_hal_msp.c \
+BSP/wm8988/wm8988.c \
+BSP/wm8988/wm8988_sai.c \
+BSP/aw9364/aw9364.c \
+BSP/ili9488/ili9488.c \
+BSP/ft6236/ft6236.c \
+BSP/w9825g6kh6/w9825g6kh6.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -164,23 +163,22 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
--ICore/Inc \
 -IDrivers/STM32H7xx_HAL_Driver/Inc \
 -IDrivers/STM32H7xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32H7xx/Include \
 -IDrivers/CMSIS/Include \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F\ \
+-IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+-IMiddlewares/Third_Party/FatFs/src \
+-IFATFS/App \
+-IFATFS/Target \
+-ICore/Inc \
 -IBSP/wm8988 \
 -IBSP/aw9364 \
 -IBSP/ili9488 \
 -IBSP/ft6236 \
--IBSP/w9825g6kh6 \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
--IFATFS/Target \
--IFATFS/App \
--IMiddlewares/Third_Party/FatFs/src
+-IBSP/w9825g6kh6
 
 
 # compile gcc flags
