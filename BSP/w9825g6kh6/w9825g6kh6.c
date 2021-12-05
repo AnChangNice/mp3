@@ -55,5 +55,5 @@ void W9825G6KH6_Init(void)
     //SDRAM refresh timer
     // 64ms/8192 = 7.81us
     // 7.81us * 120MHz - 20 = 917.2us
-    FMC_SDRAM_ProgramRefreshRate(&hsdram1, 917);
+    FMC_SDRAM_ProgramRefreshRate(hsdram1.Instance, 917);
 }
