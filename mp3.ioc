@@ -1,8 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
 DMA2D.ColorMode=DMA2D_OUTPUT_RGB888
-DMA2D.IPParameters=ColorMode,Mode,InputColorModeForeground
+DMA2D.IPParameters=ColorMode,Mode,InputColorModeForeground,RedBlueSwapForeground
 DMA2D.InputColorModeForeground=DMA2D_INPUT_RGB565
 DMA2D.Mode=DMA2D_M2M_PFC
+DMA2D.RedBlueSwapForeground=DMA2D_RB_SWAP
 Dma.Request0=SAI2_A
 Dma.Request1=SPI2_TX
 Dma.Request2=SPI2_RX
