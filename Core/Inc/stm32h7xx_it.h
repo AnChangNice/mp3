@@ -60,6 +60,7 @@ void EXTI9_5_IRQHandler(void);
 void TIM2_IRQHandler(void);
 void SPI2_IRQHandler(void);
 void EXTI15_10_IRQHandler(void);
+void FMC_IRQHandler(void);
 void SDMMC1_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
