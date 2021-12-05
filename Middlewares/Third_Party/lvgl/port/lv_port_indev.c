@@ -4,13 +4,15 @@
  */
 
  /*Copy this file as "lv_port_indev.c" and set this value to "1" to enable content*/
-#if 0
+#if 1
 
 /*********************
  *      INCLUDES
  *********************/
-#include "lv_port_indev_template.h"
-#include "../../lvgl.h"
+#include "lv_port_indev.h"
+#include "../lvgl.h"
+
+#include "ft6236.h"
 
 /*********************
  *      DEFINES
@@ -28,7 +30,7 @@ static void touchpad_init(void);
 static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
 static bool touchpad_is_pressed(void);
 static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y);
-
+#if 0
 static void mouse_init(void);
 static void mouse_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
 static bool mouse_is_pressed(void);
@@ -46,11 +48,13 @@ static void button_init(void);
 static void button_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
 static int8_t button_get_pressed_id(void);
 static bool button_is_pressed(uint8_t id);
+#endif
 
 /**********************
  *  STATIC VARIABLES
  **********************/
 lv_indev_t * indev_touchpad;
+#if 0
 lv_indev_t * indev_mouse;
 lv_indev_t * indev_keypad;
 lv_indev_t * indev_encoder;
@@ -58,7 +62,7 @@ lv_indev_t * indev_button;
 
 static int32_t encoder_diff;
 static lv_indev_state_t encoder_state;
-
+#endif
 /**********************
  *      MACROS
  **********************/
@@ -96,6 +100,7 @@ void lv_port_indev_init(void)
     indev_drv.read_cb = touchpad_read;
     indev_touchpad = lv_indev_drv_register(&indev_drv);
 
+#if 0
     /*------------------
      * Mouse
      * -----------------*/
@@ -169,6 +174,7 @@ void lv_port_indev_init(void)
             {40, 100},  /*Button 1 -> x:40; y:100*/
     };
     lv_indev_set_button_points(indev_button, btn_points);
+#endif
 }
 
 /**********************
@@ -183,6 +189,7 @@ void lv_port_indev_init(void)
 static void touchpad_init(void)
 {
     /*Your code comes here*/
+    FT6236_Init();
 }
 
 /*Will be called by the library to read the touchpad*/
@@ -208,6 +215,14 @@ static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 static bool touchpad_is_pressed(void)
 {
     /*Your code comes here*/
+    FT6236_Point_t point;
+    FT6236_PollOnce();
+    FT6236_GetPoint(&point);
+
+    if(point.state == 1)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -216,11 +231,14 @@ static bool touchpad_is_pressed(void)
 static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
 {
     /*Your code comes here*/
+    FT6236_Point_t point;
+    FT6236_GetPoint(&point);
 
-    (*x) = 0;
-    (*y) = 0;
+    (*x) = (lv_coord_t)point.x;
+    (*y) = (lv_coord_t)point.y;
 }
 
+#if 0
 /*------------------
  * Mouse
  * -----------------*/
@@ -402,7 +420,7 @@ static bool button_is_pressed(uint8_t id)
 
     return false;
 }
-
+#endif
 #else /*Enable this file at the top*/
 
 /*This dummy typedef exists purely to silence -Wpedantic.*/
