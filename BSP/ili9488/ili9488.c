@@ -192,6 +192,22 @@ void ILI9488_SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     write_cmd(0x2C);
 }
 
+void ILI9488_Write(uint8_t *data, uint32_t size)
+{
+    if (size <= 65535)
+    {
+        write_bytes(data, size);
+    }
+    else
+    {
+        for (int i = 0; (i + 65535) < size; i += 65535)
+        {
+            write_bytes(&data[i], 65535);
+        }
+        write_bytes(&data[size - (size % 65535)], size % 65535);
+    }
+}
+
 void ILI9488_FillWindow(uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b)
 {
     int32_t pixels = w * h;
