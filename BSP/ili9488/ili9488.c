@@ -110,8 +110,7 @@ void ILI9488_Init(void)
 #endif
 
     write_cmd(0x3A); //COLMOD (Interface Pixel Format)
-    //write_data(0x77); //24bits/pixel
-    write_data(0x66);
+    write_data(0x66); //18bits/pixel
 
     write_cmd(0XB0); //IFMODE (Interface Mode Control)
     write_data(0x00);
@@ -211,7 +210,7 @@ void ILI9488_Write(uint8_t *data, uint32_t size)
 void ILI9488_FillWindow(uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b)
 {
     int32_t pixels = w * h;
-    uint8_t pixcel_buff[3] = {r, g, b};
+    uint8_t pixcel_buff[] = {r, g, b};
 
     for (int32_t i = 0; i < pixels; i++)
     {
