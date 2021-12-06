@@ -44,11 +44,11 @@ void W9825G6KH6_Init(void)
     Cmd.AutoRefreshNumber = 1;
     //Burst Length 1
     //Addressing Mode Interleave
-    //CAS Latency 3
+    //CAS Latency 2
     //Burst read and single write
     Cmd.ModeRegisterDefinition = (0 << 0) \
                                | (1 << 3) \
-                               | (3 << 4) \
+                               | (2 << 4) \
                                | (1 << 9);
     HAL_SDRAM_SendCommand(&hsdram1, &Cmd, HAL_MAX_DELAY);
 
