@@ -216,7 +216,7 @@ static bool touchpad_is_pressed(void)
 {
     /*Your code comes here*/
     FT6236_TouchPos_t touch_pos;
-    FT6236_GetData(&touch_pos);
+    FT6236_GetTouchPos(&touch_pos);
 
     if(touch_pos.state == 1)
     {
@@ -231,7 +231,7 @@ static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
 {
     /*Your code comes here*/
     FT6236_TouchPos_t touch_pos;
-    FT6236_GetData(&touch_pos);
+    FT6236_GetTouchPos(&touch_pos);
 
     (*x) = (lv_coord_t)touch_pos.x;
     (*y) = (lv_coord_t)touch_pos.y;

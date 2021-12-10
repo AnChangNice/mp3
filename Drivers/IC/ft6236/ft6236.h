@@ -17,6 +17,6 @@ typedef struct _ft6236_touch_pos
 
 void FT6236_Init(void);
 void FT6236_Update(void); //Manually poll data from FT6236.
-void FT6236_GetData(FT6236_TouchPos_t *pos);
+void FT6236_GetTouchPos(FT6236_TouchPos_t *pos);
 
 #endif //__FT6236_H
