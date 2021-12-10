@@ -263,7 +263,8 @@ Drivers/IC/wm8988/wm8988_sai.c \
 Drivers/IC/aw9364/aw9364.c \
 Drivers/IC/ili9488/ili9488.c \
 Drivers/IC/ft6236/ft6236.c \
-Drivers/IC/w9825g6kh6/w9825g6kh6.c
+Drivers/IC/w9825g6kh6/w9825g6kh6.c \
+BSP/touchpad/touchpad.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -382,7 +383,8 @@ C_INCLUDES =  \
 -IDrivers/IC/aw9364 \
 -IDrivers/IC/ili9488 \
 -IDrivers/IC/ft6236 \
--IDrivers/IC/w9825g6kh6
+-IDrivers/IC/w9825g6kh6 \
+-IBSP/touchpad
 
 
 # compile gcc flags

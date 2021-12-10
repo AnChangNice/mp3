@@ -24,7 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lvgl.h"
-#include "ft6236.h"
+#include "touchpad.h"
 
 /* USER CODE END Includes */
 
@@ -264,7 +264,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-  FT6236_Update();
+  Touchpad_Update();
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 
