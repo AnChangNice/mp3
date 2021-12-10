@@ -216,7 +216,6 @@ static bool touchpad_is_pressed(void)
 {
     /*Your code comes here*/
     FT6236_Point_t point;
-    FT6236_PollOnce();
     FT6236_GetPoint(&point);
 
     if(point.state == 1)
