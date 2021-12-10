@@ -258,12 +258,12 @@ Core/Src/gpio.c \
 Core/Src/rtc.c \
 Core/Src/usart.c \
 Core/Src/dma2d.c \
-BSP/wm8988/wm8988.c \
-BSP/wm8988/wm8988_sai.c \
-BSP/aw9364/aw9364.c \
-BSP/ili9488/ili9488.c \
-BSP/ft6236/ft6236.c \
-BSP/w9825g6kh6/w9825g6kh6.c
+Drivers/IC/wm8988/wm8988.c \
+Drivers/IC/wm8988/wm8988_sai.c \
+Drivers/IC/aw9364/aw9364.c \
+Drivers/IC/ili9488/ili9488.c \
+Drivers/IC/ft6236/ft6236.c \
+Drivers/IC/w9825g6kh6/w9825g6kh6.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -378,11 +378,11 @@ C_INCLUDES =  \
 -IFATFS/App \
 -IFATFS/Target \
 -ICore/Inc \
--IBSP/wm8988 \
--IBSP/aw9364 \
--IBSP/ili9488 \
--IBSP/ft6236 \
--IBSP/w9825g6kh6
+-IDrivers/IC/wm8988 \
+-IDrivers/IC/aw9364 \
+-IDrivers/IC/ili9488 \
+-IDrivers/IC/ft6236 \
+-IDrivers/IC/w9825g6kh6
 
 
 # compile gcc flags

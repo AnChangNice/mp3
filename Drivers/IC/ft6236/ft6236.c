@@ -214,7 +214,7 @@ static int iic_read_bytes(uint8_t addr, uint8_t *data, uint8_t len)
     return len;
 }
 
-static FT6236_Point_t touch_point;
+static FT6236_TouchPos_t touch_position;
 static uint8_t data[4];
 
 void FT6236_Init(void)
@@ -235,7 +235,7 @@ void FT6236_Init(void)
 }
 
 //Manually poll data from FT6236.
-void FT6236_PollOnce(void)
+void FT6236_Update(void)
 {
     uint16_t temp;
     iic_set_data_addr(FT6236_IIC_ADDR, FT6236_REG_P1_XH);
@@ -243,37 +243,25 @@ void FT6236_PollOnce(void)
     //x
     temp  = (data[0] & 0x0f) << 8;
     temp |= data[1];
-    touch_point.x = temp;
+    touch_position.x = temp;
     //y
     temp  = (data[2] & 0x0f) << 8;
     temp |= data[3];
-    touch_point.y = temp;
+    touch_position.y = temp;
     //state
     temp = (data[0] & 0xC0) >> 6;
     switch(temp)
     {
-        case 0: touch_point.state = FT6236_POINT_STATE_PRESSED;   break;
-        case 1: touch_point.state = FT6236_POINT_STATE_RELEASED;  break;
-        case 2: touch_point.state = FT6236_POINT_STATE_PRESSED;   break;
-        case 3: touch_point.state = FT6236_POINT_STATE_RELEASED;  break;
+        case 0: touch_position.state = FT6236_TOUCH_POS_STATE_PRESSED;   break;
+        case 1: touch_position.state = FT6236_TOUCH_POS_STATE_RELEASED;  break;
+        case 2: touch_position.state = FT6236_TOUCH_POS_STATE_PRESSED;   break;
+        case 3: touch_position.state = FT6236_TOUCH_POS_STATE_RELEASED;  break;
     }
 }
 
-void FT6236_GetPoint(FT6236_Point_t *point)
+void FT6236_GetPoint(FT6236_TouchPos_t *touch_pos)
 {
-    memcpy(point, &touch_point, sizeof(FT6236_Point_t));
+    memcpy(touch_pos, &touch_position, sizeof(FT6236_TouchPos_t));
 }
 
-/* This API should be used in interrupt trigger mode. */
-void FT6236_DataUpdateISR(void)
-{
-    FT6236_PollOnce();
-    FT6236_DataUpdateCallback(&touch_point);
-}
-
-/* This API should be defined by user to get data for every update. */
-__weak void FT6236_DataUpdateCallback(FT6236_Point_t *point)
-{
-
-}
 

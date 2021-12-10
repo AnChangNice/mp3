@@ -215,10 +215,10 @@ static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 static bool touchpad_is_pressed(void)
 {
     /*Your code comes here*/
-    FT6236_Point_t point;
-    FT6236_GetPoint(&point);
+    FT6236_TouchPos_t touch_pos;
+    FT6236_GetData(&touch_pos);
 
-    if(point.state == 1)
+    if(touch_pos.state == 1)
     {
         return true;
     }
@@ -230,11 +230,11 @@ static bool touchpad_is_pressed(void)
 static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
 {
     /*Your code comes here*/
-    FT6236_Point_t point;
-    FT6236_GetPoint(&point);
+    FT6236_TouchPos_t touch_pos;
+    FT6236_GetData(&touch_pos);
 
-    (*x) = (lv_coord_t)point.x;
-    (*y) = (lv_coord_t)point.y;
+    (*x) = (lv_coord_t)touch_pos.x;
+    (*y) = (lv_coord_t)touch_pos.y;
 }
 
 #if 0
