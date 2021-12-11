@@ -12,7 +12,7 @@
 #include "lv_port_disp.h"
 #include "../lvgl.h"
 
-#include "aw9364.h"
+#include "backlight.h"
 #include "display.h"
 
 /*********************
@@ -135,7 +135,7 @@ static void disp_init(void)
 {
     /*You code here*/
     //Open backlight
-    AW9364_on(16);
+    Backlight_On(100);
     //Init screen
     Display_Init();
 }
