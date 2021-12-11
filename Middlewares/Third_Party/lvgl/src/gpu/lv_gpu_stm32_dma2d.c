@@ -95,6 +95,9 @@ void lv_gpu_stm32_dma2d_fill(lv_color_t * buf, lv_coord_t buf_w, lv_color_t colo
 {
     invalidate_cache();
 
+    /*set output colour mode*/
+    DMA2D->OPFCCR = LV_DMA2D_COLOR_FORMAT;
+
     DMA2D->CR = 0x30000;
     DMA2D->OMAR = (uint32_t)buf;
     /*as input color mode is same as output we don't need to convert here do we?*/
@@ -169,6 +172,9 @@ void lv_gpu_stm32_dma2d_copy(lv_color_t * buf, lv_coord_t buf_w, const lv_color_
 {
     invalidate_cache();
 
+    /*set output colour mode*/
+    DMA2D->OPFCCR = LV_DMA2D_COLOR_FORMAT;
+
     DMA2D->CR = 0;
     /*copy output colour mode, this register controls both input and output colour format*/
     DMA2D->FGPFCCR = LV_DMA2D_COLOR_FORMAT;
@@ -198,6 +204,10 @@ void lv_gpu_stm32_dma2d_blend(lv_color_t * buf, lv_coord_t buf_w, const lv_color
                               lv_coord_t map_w, lv_coord_t copy_w, lv_coord_t copy_h)
 {
     invalidate_cache();
+
+    /*set output colour mode*/
+    DMA2D->OPFCCR = LV_DMA2D_COLOR_FORMAT;
+
     DMA2D->CR = 0x20000;
 
     DMA2D->BGPFCCR = LV_DMA2D_COLOR_FORMAT;

@@ -259,7 +259,7 @@ void FT6236_Update(void)
     }
 }
 
-void FT6236_GetPoint(FT6236_TouchPos_t *touch_pos)
+void FT6236_GetTouchPos(FT6236_TouchPos_t *touch_pos)
 {
     memcpy(touch_pos, &touch_position, sizeof(FT6236_TouchPos_t));
 }

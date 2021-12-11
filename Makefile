@@ -264,7 +264,8 @@ Drivers/IC/aw9364/aw9364.c \
 Drivers/IC/ili9488/ili9488.c \
 Drivers/IC/ft6236/ft6236.c \
 Drivers/IC/w9825g6kh6/w9825g6kh6.c \
-BSP/touchpad/touchpad.c
+BSP/touchpad/touchpad.c \
+BSP/display/display.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -313,7 +314,8 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
--DSTM32H750xx
+-DSTM32H750xx \
+-DSTM32H7
 
 
 # AS includes
@@ -384,8 +386,8 @@ C_INCLUDES =  \
 -IDrivers/IC/ili9488 \
 -IDrivers/IC/ft6236 \
 -IDrivers/IC/w9825g6kh6 \
--IBSP/touchpad
-
+-IBSP/touchpad \
+-IBSP/display
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -413,8 +415,8 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-
+#all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(BUILD_DIR)/$(TARGET).elf
 
 #######################################
 # build the application
@@ -439,8 +441,8 @@ $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
 	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+#$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+#	$(BIN) $< $@	
 	
 $(BUILD_DIR):
 	mkdir $@		

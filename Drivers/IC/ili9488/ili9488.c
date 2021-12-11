@@ -26,13 +26,25 @@ static void write_data(uint8_t data)
     while(HAL_SPI_STATE_READY != HAL_SPI_GetState(&hspi2));
 }
 
-static void write_bytes(uint8_t *data, uint16_t len)
+static void start_send_bytes(uint8_t *data, uint16_t len)
 {
     ILI9488_DCX_DATA_HIGH();
 
     (void)HAL_SPI_Transmit_DMA(&hspi2, data, len);
+}
 
-    while(HAL_SPI_STATE_READY != HAL_SPI_GetState(&hspi2));
+static void fill_window(uint8_t r, uint8_t g, uint8_t b)
+{
+    int32_t pixels = 320 * 480;
+    uint8_t pixcel_buff[] = {r, g, b};
+
+    ILI9488_SetWindow(0, 0, 320, 480);
+
+    for (int32_t i = 0; i < pixels; i++)
+    {
+        ILI9488_Write(pixcel_buff, 3, NULL);
+        while(ILI9488_IsBusy());
+    }
 }
 
 static void ili9488_reset(void)
@@ -152,8 +164,7 @@ void ILI9488_Init(void)
     write_data(0x2C);
     write_data(0x82);
 
-    ILI9488_SetWindow(0, 0, 320, 480);
-    ILI9488_FillWindow(320, 480, 0, 0, 0);
+    fill_window(0, 0, 0);
 
     write_cmd(0x11); //Sleep OUT
     HAL_Delay(120);
@@ -191,30 +202,71 @@ void ILI9488_SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     write_cmd(0x2C);
 }
 
-void ILI9488_Write(uint8_t *data, uint32_t size)
+static volatile int is_busy = 0;
+static volatile void (*write_complete_callback)(void);
+static volatile uint32_t remain_size = 0;
+static uint8_t *pdata = NULL;
+
+int ILI9488_Write(uint8_t *data, uint32_t size, void (*callback)(void))
 {
-    if (size <= 65535)
+    if(is_busy)
     {
-        write_bytes(data, size);
+        return -1;
+    }
+
+    is_busy = 1;
+    write_complete_callback = callback;
+
+    if(size <= 65535)
+    {
+        pdata = NULL;
+        remain_size = 0;
+        start_send_bytes(data, size);
     }
     else
     {
-        for (int i = 0; (i + 65535) < size; i += 65535)
-        {
-            write_bytes(&data[i], 65535);
-        }
-        write_bytes(&data[size - (size % 65535)], size % 65535);
+        pdata = data + 65535;
+        remain_size = size - 65535;
+        start_send_bytes(data, 65535);
     }
+    
+    return 0;
 }
 
-void ILI9488_FillWindow(uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b)
+int ILI9488_IsBusy(void)
 {
-    int32_t pixels = w * h;
-    uint8_t pixcel_buff[] = {r, g, b};
-
-    for (int32_t i = 0; i < pixels; i++)
-    {
-        write_bytes(pixcel_buff, 3);
-    }
+    return is_busy;
 }
 
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if(hspi == &hspi2)
+    {
+        if(remain_size == 0)
+        {
+            if(NULL != write_complete_callback)
+            {
+                write_complete_callback();
+                write_complete_callback = NULL;
+            }
+            is_busy = 0;
+            pdata = NULL;
+            remain_size = 0;
+        }
+        else
+        {
+            if(remain_size <= 65535)
+            {
+                start_send_bytes(pdata, remain_size);
+                remain_size = 0;
+                pdata = NULL;
+            }
+            else
+            {
+                start_send_bytes(pdata, 65535);
+                remain_size -= 65535;
+                pdata += 65535;
+            }
+        }
+    }
+}

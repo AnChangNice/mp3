@@ -13,8 +13,7 @@
 #include "../lvgl.h"
 
 #include "aw9364.h"
-#include "ili9488.h"
-#include "dma2d.h"
+#include "display.h"
 
 /*********************
  *      DEFINES
@@ -37,7 +36,6 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 /**********************
  *  STATIC VARIABLES
  **********************/
-static uint8_t format_cov_buff[MY_DISP_HOR_RES * MY_DISP_VER_RES * 3] __attribute__((section(".sdram")));
 
 /**********************
  *      MACROS
@@ -117,7 +115,7 @@ void lv_port_disp_init(void)
     disp_drv.draw_buf = &draw_buf_dsc_3;
 
     /*Required for Example 3)*/
-    disp_drv.full_refresh = 1;
+    //disp_drv.full_refresh = 1;
 
     /* Fill a memory array with a color if you have GPU.
      * Note that, in lv_conf.h you can enable GPUs that has built-in support in LVGL.
@@ -139,7 +137,7 @@ static void disp_init(void)
     //Open backlight
     AW9364_on(16);
     //Init screen
-    ILI9488_Init();
+    Display_Init();
 }
 
 /*Flush the content of the internal buffer the specific area on the display
@@ -159,18 +157,14 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
         }
     }
 #else
-    int x = area->x1;
-    int y = area->y1;
-    int w = area->x2 - area->x1 + 1;
-    int h = area->y2 - area->y1 + 1;
+    uint16_t x = area->x1;
+    uint16_t y = area->y1;
+    uint32_t w = area->x2 - area->x1 + 1;
+    uint32_t h = area->y2 - area->y1 + 1;
 
-    //RGB565 -> RGB888(24bits mode in SPI transfer process)
-    HAL_DMA2D_Start_IT(&hdma2d, (uint32_t)color_p, (uint32_t)format_cov_buff, w, h);
-    while(HAL_DMA2D_STATE_READY != HAL_DMA2D_GetState(&hdma2d));
-
-    //Write RGB888 data to GRAM by SPI
-    ILI9488_SetWindow(x, y, w, h);
-    ILI9488_Write(format_cov_buff, w * h * 3);
+    Display_SetWindow(x, y, w, h);
+    (void)Display_FillData((uint8_t *)color_p, w * h * 3, Display_Data_RGB565, NULL);
+    while(Display_IsBusy());
 
 #endif
     /*IMPORTANT!!!
