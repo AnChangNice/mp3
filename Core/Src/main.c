@@ -34,7 +34,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "w9825g6kh6.h"
+#include "sdram.h"
 
 /* USER CODE END Includes */
 
@@ -113,7 +113,7 @@ int main(void)
   MX_FMC_Init();
   MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
-  W9825G6KH6_Init(); //Init SDRAM before anyother application start.
+  SDRAM_Init(); //Init SDRAM before anyother application start.
 
   /* USER CODE END 2 */
 
