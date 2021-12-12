@@ -267,7 +267,8 @@ Drivers/IC/w9825g6kh6/w9825g6kh6.c \
 BSP/touchpad/touchpad.c \
 BSP/display/display.c \
 BSP/backlight/backlight.c \
-BSP/sdram/sdram.c
+BSP/sdram/sdram.c \
+BSP/audio/audio.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -391,7 +392,8 @@ C_INCLUDES =  \
 -IBSP/touchpad \
 -IBSP/display \
 -IBSP/backlight \
--IBSP/sdram
+-IBSP/sdram \
+-IBSP/audio
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
