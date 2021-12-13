@@ -224,6 +224,10 @@ Middlewares/lvgl/src/widgets/lv_slider.c \
 Middlewares/lvgl/src/widgets/lv_switch.c \
 Middlewares/lvgl/src/widgets/lv_table.c \
 Middlewares/lvgl/src/widgets/lv_textarea.c \
+Middlewares/FatFs/src/diskio.c \
+Middlewares/FatFs/src/ff.c \
+Middlewares/FatFs/src/ffsystem.c \
+Middlewares/FatFs/src/ffunicode.c \
 Core/Src/stm32h7xx_it.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_hal_timebase_tim.c \
@@ -358,6 +362,8 @@ C_INCLUDES =  \
 -IMiddlewares/lvgl/src/hal \
 -IMiddlewares/lvgl/src/misc \
 -IMiddlewares/lvgl/src/widgets \
+-IMiddlewares/FatFs \
+-IMiddlewares/FatFs/src \
 -ICore/Inc \
 -IDrivers/IC/wm8988 \
 -IDrivers/IC/aw9364 \
