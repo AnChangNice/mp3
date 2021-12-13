@@ -435,10 +435,20 @@ $(BUILD_DIR):
 	mkdir $@		
 
 #######################################
+# build options
+#######################################
+debug:
+	make -j8 OPT=-O0 > log.txt
+
+release:
+	make -j8 > log.txt
+
+#######################################
 # clean up
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+	-rm log.txt
 
 #######################################
 # info
@@ -453,6 +463,9 @@ sections:
 	arm-none-eabi-size $(BUILD_DIR)/$(TARGET).elf -A -x
 
 size:
+	@arm-none-eabi-size $(BUILD_DIR)/$(TARGET).elf
+
+allsize:
 	@arm-none-eabi-size $(OBJECTS) -t
 
 #######################################
