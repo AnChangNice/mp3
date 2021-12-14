@@ -10,6 +10,8 @@ Make: GNU Make
 
 Debug: Ozone
 
+2MB Flash Debug Target: STM32H743XI
+
 # Cmd
 make
 
