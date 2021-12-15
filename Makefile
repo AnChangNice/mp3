@@ -229,6 +229,7 @@ Middlewares/FatFs/src/ff.c \
 Middlewares/FatFs/src/ffsystem.c \
 Middlewares/FatFs/src/ffunicode.c \
 Middlewares/FatFs/port/mmc_diskio.c \
+Middlewares/FatFs/port/ff_fattime.c \
 Core/Src/stm32h7xx_it.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_hal_timebase_tim.c \

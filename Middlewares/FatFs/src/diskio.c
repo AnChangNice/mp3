@@ -48,6 +48,7 @@ DSTATUS disk_status (
 		result = MMC_disk_status();
 
 		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 #endif
@@ -94,6 +95,7 @@ DSTATUS disk_initialize (
 		result = MMC_disk_initialize();
 
 		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 #endif
@@ -144,9 +146,10 @@ DRESULT disk_read (
 	case DEV_MMC :
 		// translate the arguments here
 
-		result = MMC_disk_read(buff, sector, count);
+		result = MMC_disk_read((uint8_t *)buff, sector, count);
 
 		// translate the reslut code here
+		res = (DRESULT)result;
 
 		return res;
 #endif
@@ -202,9 +205,10 @@ DRESULT disk_write (
 	case DEV_MMC :
 		// translate the arguments here
 
-		result = MMC_disk_write(buff, sector, count);
+		result = MMC_disk_write((uint8_t *)buff, sector, count);
 
 		// translate the reslut code here
+		res = (DRESULT)result;
 
 		return res;
 #endif
@@ -239,7 +243,8 @@ DRESULT disk_ioctl (
 )
 {
 	DRESULT res;
-	int result;
+	//int result;
+	LBA_t start_addr, end_addr;
 
 	switch (pdrv) {
 
@@ -255,6 +260,34 @@ DRESULT disk_ioctl (
 	case DEV_MMC :
 
 		// Process of the command for the MMC/SD card
+		switch(cmd)
+		{
+			case CTRL_SYNC:
+				MMC_disk_ioctl_sync();
+				res = RES_OK;
+				break;
+			case GET_SECTOR_COUNT:
+				*(LBA_t*)buff = (LBA_t)MMC_disk_ioctl_get_sector_count();
+				res = RES_OK;
+				break;
+			case GET_SECTOR_SIZE:
+				*(WORD*)buff = (WORD)MMC_disk_ioctl_get_sector_size();
+				res = RES_OK;
+				break;
+			case GET_BLOCK_SIZE:
+				*(DWORD*)buff = (DWORD)MMC_disk_ioctl_get_block_size();
+				res = RES_OK;
+				break;
+			case CTRL_TRIM:
+				start_addr = *((LBA_t*)buff + 0);
+				end_addr = *((LBA_t*)buff + 1);
+				MMC_disk_ioctl_erase_blocks((uint32_t)start_addr, (uint32_t)end_addr);
+				res = RES_OK;
+				break;
+			default:
+				res = RES_ERROR;
+				break;
+		}
 
 		return res;
 #endif
