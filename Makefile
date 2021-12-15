@@ -228,6 +228,7 @@ Middlewares/FatFs/src/diskio.c \
 Middlewares/FatFs/src/ff.c \
 Middlewares/FatFs/src/ffsystem.c \
 Middlewares/FatFs/src/ffunicode.c \
+Middlewares/FatFs/port/mmc_diskio.c \
 Core/Src/stm32h7xx_it.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_hal_timebase_tim.c \
@@ -364,6 +365,7 @@ C_INCLUDES =  \
 -IMiddlewares/lvgl/src/widgets \
 -IMiddlewares/FatFs \
 -IMiddlewares/FatFs/src \
+-IMiddlewares/FatFs/port \
 -ICore/Inc \
 -IDrivers/IC/wm8988 \
 -IDrivers/IC/aw9364 \

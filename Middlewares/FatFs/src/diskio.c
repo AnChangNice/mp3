@@ -10,11 +10,16 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 
-/* Definitions of physical drive number for each drive */
-#define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
-#define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
-#define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
 
+
+/* Definitions of physical drive number for each drive */
+//#define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
+#define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
+//#define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
+
+#if defined(DEV_MMC)
+#include "mmc_diskio.h" /* User defined mmc/sd diskio interface. */
+#endif
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -28,26 +33,34 @@ DSTATUS disk_status (
 	int result;
 
 	switch (pdrv) {
+
+#if defined(DEV_RAM)
 	case DEV_RAM :
 		result = RAM_disk_status();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
 
+#if defined(DEV_MMC)
 	case DEV_MMC :
 		result = MMC_disk_status();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
 
+#if defined(DEV_USB)
 	case DEV_USB :
 		result = USB_disk_status();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
+
 	}
 	return STA_NOINIT;
 }
@@ -66,26 +79,34 @@ DSTATUS disk_initialize (
 	int result;
 
 	switch (pdrv) {
+
+#if defined(DEV_RAM)
 	case DEV_RAM :
 		result = RAM_disk_initialize();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
 
+#if defined(DEV_MMC)
 	case DEV_MMC :
 		result = MMC_disk_initialize();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
 
+#if defined(DEV_USB)
 	case DEV_USB :
 		result = USB_disk_initialize();
 
 		// translate the reslut code here
 
 		return stat;
+#endif
+
 	}
 	return STA_NOINIT;
 }
@@ -107,6 +128,8 @@ DRESULT disk_read (
 	int result;
 
 	switch (pdrv) {
+
+#if defined(DEV_RAM)
 	case DEV_RAM :
 		// translate the arguments here
 
@@ -115,7 +138,9 @@ DRESULT disk_read (
 		// translate the reslut code here
 
 		return res;
+#endif
 
+#if defined(DEV_MMC)
 	case DEV_MMC :
 		// translate the arguments here
 
@@ -124,7 +149,9 @@ DRESULT disk_read (
 		// translate the reslut code here
 
 		return res;
+#endif
 
+#if defined(DEV_USB)
 	case DEV_USB :
 		// translate the arguments here
 
@@ -133,6 +160,8 @@ DRESULT disk_read (
 		// translate the reslut code here
 
 		return res;
+#endif
+
 	}
 
 	return RES_PARERR;
@@ -157,6 +186,8 @@ DRESULT disk_write (
 	int result;
 
 	switch (pdrv) {
+
+#if defined(DEV_RAM)
 	case DEV_RAM :
 		// translate the arguments here
 
@@ -165,7 +196,9 @@ DRESULT disk_write (
 		// translate the reslut code here
 
 		return res;
+#endif
 
+#if defined(DEV_MMC)
 	case DEV_MMC :
 		// translate the arguments here
 
@@ -174,7 +207,9 @@ DRESULT disk_write (
 		// translate the reslut code here
 
 		return res;
+#endif
 
+#if defined(DEV_USB)
 	case DEV_USB :
 		// translate the arguments here
 
@@ -183,6 +218,8 @@ DRESULT disk_write (
 		// translate the reslut code here
 
 		return res;
+#endif
+
 	}
 
 	return RES_PARERR;
@@ -205,23 +242,31 @@ DRESULT disk_ioctl (
 	int result;
 
 	switch (pdrv) {
+
+#if defined(DEV_RAM)
 	case DEV_RAM :
 
 		// Process of the command for the RAM drive
 
 		return res;
+#endif
 
+#if defined(DEV_MMC)
 	case DEV_MMC :
 
 		// Process of the command for the MMC/SD card
 
 		return res;
+#endif
 
+#if defined(DEV_USB)
 	case DEV_USB :
 
 		// Process of the command the USB drive
 
 		return res;
+#endif
+
 	}
 
 	return RES_PARERR;
