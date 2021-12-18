@@ -45,7 +45,7 @@ void MX_SAI2_Init(void)
   hsai_BlockA2.Init.AudioMode = SAI_MODEMASTER_TX;
   hsai_BlockA2.Init.Synchro = SAI_ASYNCHRONOUS;
   hsai_BlockA2.Init.OutputDrive = SAI_OUTPUTDRIVE_DISABLE;
-  hsai_BlockA2.Init.NoDivider = SAI_MASTERDIVIDER_ENABLE;
+  hsai_BlockA2.Init.NoDivider = SAI_MASTERDIVIDER_DISABLE;
   hsai_BlockA2.Init.FIFOThreshold = SAI_FIFOTHRESHOLD_EMPTY;
   hsai_BlockA2.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_48K;
   hsai_BlockA2.Init.SynchroExt = SAI_SYNCEXT_DISABLE;
@@ -81,10 +81,9 @@ void HAL_SAI_MspInit(SAI_HandleTypeDef* hsai)
     /**SAI2_A_Block_A GPIO Configuration
     PI6     ------> SAI2_SD_A
     PI5     ------> SAI2_SCK_A
-    PI4     ------> SAI2_MCLK_A
     PI7     ------> SAI2_FS_A
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_5|GPIO_PIN_4|GPIO_PIN_7;
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_5|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -131,10 +130,9 @@ void HAL_SAI_MspDeInit(SAI_HandleTypeDef* hsai)
     /**SAI2_A_Block_A GPIO Configuration
     PI6     ------> SAI2_SD_A
     PI5     ------> SAI2_SCK_A
-    PI4     ------> SAI2_MCLK_A
     PI7     ------> SAI2_FS_A
     */
-    HAL_GPIO_DeInit(GPIOI, GPIO_PIN_6|GPIO_PIN_5|GPIO_PIN_4|GPIO_PIN_7);
+    HAL_GPIO_DeInit(GPIOI, GPIO_PIN_6|GPIO_PIN_5|GPIO_PIN_7);
 
     HAL_DMA_DeInit(hsai->hdmarx);
     HAL_DMA_DeInit(hsai->hdmatx);

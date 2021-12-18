@@ -36,7 +36,7 @@ int Audio_SetFormat(uint32_t sample_rate, uint32_t channels, uint32_t bits)
         return -1;
     }
 
-    if(WM8988_OK != WM8988_SetSampleRate(bits))
+    if(WM8988_OK != WM8988_SetBits(bits))
     {
         return -1;
     }

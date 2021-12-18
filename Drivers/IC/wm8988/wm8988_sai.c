@@ -85,7 +85,7 @@ static int SampleRate_Bits_To_DIV_FDL_Table[][10] = {
 };
 void SAI2_SetSampleRateAndBits(int sampleRate, int bits)
 {
-	int DIV = 0, FRL = 0, DS = 0;
+	int DIV = 0, FRL = 0, DS = 0, DMA_DS = 0;
 	int i, j;
 	switch (sampleRate)
 	{
@@ -103,27 +103,41 @@ void SAI2_SetSampleRateAndBits(int sampleRate, int bits)
 	}
 	switch (bits)
 	{
-	case  8: j = 0; DS = 2; break;
-	case 16: j = 2; DS = 4; break;
-	case 20: j = 4; DS = 5; break;
-	case 24: j = 6; DS = 6; break;
-	case 32: j = 8; DS = 7; break;
-	default: j = 0; DS = 2; break;
+	case  8: j = 0; DS = 2; DMA_DS = 0; break;
+	case 16: j = 2; DS = 4; DMA_DS = 1; break;
+	case 20: j = 4; DS = 5; DMA_DS = 2; break; //DMA only support 8,16,32bits transfer
+	case 24: j = 6; DS = 6; DMA_DS = 2; break; //DMA only support 8,16,32bits transfer
+	case 32: j = 8; DS = 7; DMA_DS = 2; break;
+	default: j = 0; DS = 2; DMA_DS = 1; break;
 	}
 
 	DIV = SampleRate_Bits_To_DIV_FDL_Table[i][j];
 	FRL = SampleRate_Bits_To_DIV_FDL_Table[i][j+1];
 
 	//Set MCKDIV
-	SAI2_Block_A->CR1 &= ~SAI_xCR1_MCKDIV_Msk; //Clear MCKDIV
-	SAI2_Block_A->CR1 |= DIV << SAI_xCR1_MCKDIV_Pos;
+	hsai_BlockA2.Instance->CR1 &= ~SAI_xCR1_MCKDIV_Msk; //Clear MCKDIV
+	hsai_BlockA2.Instance->CR1 |= DIV << SAI_xCR1_MCKDIV_Pos;
 	//Set FRL
-	SAI2_Block_A->FRCR &= ~SAI_xFRCR_FRL_Msk; //Clear FRL
-	SAI2_Block_A->FRCR |= (FRL-1) << SAI_xFRCR_FRL_Pos;
+	hsai_BlockA2.Instance->FRCR &= ~SAI_xFRCR_FRL_Msk; //Clear FRL
+	hsai_BlockA2.Instance->FRCR |= (FRL-1) << SAI_xFRCR_FRL_Pos;
 	//Set DS
-	SAI2_Block_A->CR1 &= ~SAI_xCR1_DS_Msk; //Clear MCKDIV
-	SAI2_Block_A->CR1 |= DS << SAI_xCR1_DS_Pos;
+	hsai_BlockA2.Instance->CR1 &= ~SAI_xCR1_DS_Msk; //Clear MCKDIV
+	hsai_BlockA2.Instance->CR1 |= DS << SAI_xCR1_DS_Pos;
 	//Set FSALL
-	SAI2_Block_A->FRCR &= ~SAI_xFRCR_FSALL_Msk; //Clear FSALL
-	SAI2_Block_A->FRCR |= ((FRL>>1)-1) << SAI_xFRCR_FSALL_Pos;
+	hsai_BlockA2.Instance->FRCR &= ~SAI_xFRCR_FSALL_Msk; //Clear FSALL
+	hsai_BlockA2.Instance->FRCR |= ((FRL>>1)-1) << SAI_xFRCR_FSALL_Pos;
+
+	//SAI DMA set to fit the bits.
+	DMA_Stream_TypeDef *hdma_stream = hsai_BlockA2.hdmatx->Instance;
+	uint32_t dma_control_val = hdma_stream->CR;
+	
+	dma_control_val &= (~DMA_SxCR_MSIZE); //Clear memory data size
+	dma_control_val &= (~DMA_SxCR_PSIZE_Msk); //Clear peripheral data size
+
+	dma_control_val |= (DMA_DS << DMA_SxCR_MSIZE_Pos); //Set memory data size
+	dma_control_val |= (DMA_DS << DMA_SxCR_PSIZE_Pos); //Set peripheral data size
+
+	//Write back to DMA channel.
+	hdma_stream->CR = dma_control_val;
 }
+
