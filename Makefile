@@ -239,6 +239,11 @@ Middlewares/FreeRTOS/queue.c \
 Middlewares/FreeRTOS/stream_buffer.c \
 Middlewares/FreeRTOS/tasks.c \
 Middlewares/FreeRTOS/timers.c \
+Middlewares/easylogger/port/elog_port.c \
+Middlewares/easylogger/src/elog.c \
+Middlewares/easylogger/src/elog_async.c \
+Middlewares/easylogger/src/elog_buf.c \
+Middlewares/easylogger/src/elog_utils.c \
 Core/Src/stm32h7xx_it.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_hal_timebase_tim.c \
@@ -379,6 +384,7 @@ C_INCLUDES =  \
 -IMiddlewares/FreeRTOS \
 -IMiddlewares/FreeRTOS/include \
 -IMiddlewares/FreeRTOS/portable/GCC/ARM_CM4F \
+-IMiddlewares/easylogger/inc \
 -ICore/Inc \
 -IDrivers/IC/wm8988 \
 -IDrivers/IC/aw9364 \
