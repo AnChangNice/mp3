@@ -783,12 +783,3 @@ static void vPortEnableVFP( void )
     }
 
 #endif /* configASSERT_DEFINED */
-
-#if ( configCHECK_FOR_STACK_OVERFLOW > 0 )
-    void vApplicationStackOverflowHook( TaskHandle_t xTask,
-                                        char * pcTaskName )
-    {
-        //dead loop for debug.
-        while(1);
-    }
-#endif
