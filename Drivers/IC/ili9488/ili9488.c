@@ -240,32 +240,38 @@ int ILI9488_IsBusy(void)
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
+    uint8_t *temp_pdata;
+    uint32_t temp_remain_size;
+
     if(hspi == &hspi2)
     {
         if(remain_size == 0)
         {
+            is_busy = 0; //Clear busy flag first, because this flag may be used in callback.
+            pdata = NULL;
+            remain_size = 0;
             if(NULL != write_complete_callback)
             {
                 write_complete_callback();
                 write_complete_callback = NULL;
             }
-            is_busy = 0;
-            pdata = NULL;
-            remain_size = 0;
         }
         else
         {
             if(remain_size <= 65535)
             {
-                start_send_bytes(pdata, remain_size);
+                temp_remain_size = remain_size; //Update the status before start transfer.
+                temp_pdata = pdata;
                 remain_size = 0;
                 pdata = NULL;
+                start_send_bytes(temp_pdata, temp_remain_size);
             }
             else
             {
-                start_send_bytes(pdata, 65535);
+                temp_pdata = pdata;  //Update the status before start transfer.
                 remain_size -= 65535;
                 pdata += 65535;
+                start_send_bytes(temp_pdata, 65535);
             }
         }
     }
