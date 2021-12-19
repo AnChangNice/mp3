@@ -114,6 +114,10 @@ void SAI2_SetSampleRateAndBits(int sampleRate, int bits)
 	DIV = SampleRate_Bits_To_DIV_FDL_Table[i][j];
 	FRL = SampleRate_Bits_To_DIV_FDL_Table[i][j+1];
 
+	//Disable DMA & SAI before config, it will enable when transfer.
+	__HAL_DMA_DISABLE(hsai_BlockA2.hdmatx);
+	__HAL_SAI_DISABLE(&hsai_BlockA2);
+
 	//Set MCKDIV
 	hsai_BlockA2.Instance->CR1 &= ~SAI_xCR1_MCKDIV_Msk; //Clear MCKDIV
 	hsai_BlockA2.Instance->CR1 |= DIV << SAI_xCR1_MCKDIV_Pos;
@@ -143,11 +147,14 @@ void SAI2_SetSampleRateAndBits(int sampleRate, int bits)
 
 void SAI2_SetChannels(int channels)
 {
+	//Disable SAI before config, it will enable when transfer.
+	__HAL_SAI_DISABLE(&hsai_BlockA2);
+
 	//To enable the mono mode,
     //1. Set MONO bit to 1 in the SAI_xCR1 register.
     //2. Set NBSLOT to 1 and SLOTEN to 3 in SAI_xSLOTR.
 	uint32_t temp_val = hsai_BlockA2.Instance->CR1;
-	
+
 	if (channels == 1)
 	{
 		temp_val &= ~SAI_xCR1_MONO_Msk; //Clear MONO
