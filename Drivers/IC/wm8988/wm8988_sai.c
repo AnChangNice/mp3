@@ -141,3 +141,32 @@ void SAI2_SetSampleRateAndBits(int sampleRate, int bits)
 	hdma_stream->CR = dma_control_val;
 }
 
+void SAI2_SetChannels(int channels)
+{
+	//To enable the mono mode,
+    //1. Set MONO bit to 1 in the SAI_xCR1 register.
+    //2. Set NBSLOT to 1 and SLOTEN to 3 in SAI_xSLOTR.
+	uint32_t temp_val = hsai_BlockA2.Instance->CR1;
+	
+	if (channels == 1)
+	{
+		temp_val &= ~SAI_xCR1_MONO_Msk; //Clear MONO
+		temp_val |= 1 << SAI_xCR1_MONO_Pos; //Set MONO
+	}
+	else
+	{
+		temp_val &= ~SAI_xCR1_MONO_Msk; //Clear MONO
+	}
+	hsai_BlockA2.Instance->CR1 = temp_val;
+
+	temp_val = hsai_BlockA2.Instance->SLOTR;
+
+	temp_val &= ~SAI_xSLOTR_NBSLOT_Msk; //Clear NBSLOT
+	temp_val |= 1 << SAI_xSLOTR_NBSLOT_Pos; //Set NBSLOT 2 slots
+
+	temp_val &= ~SAI_xSLOTR_SLOTEN_Msk; //Clear NBSLOT
+	temp_val |= 3 << SAI_xSLOTR_SLOTEN_Pos; //Set NBSLOT 0,1 enable
+
+	hsai_BlockA2.Instance->SLOTR = temp_val;
+}
+

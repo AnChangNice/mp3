@@ -42,6 +42,7 @@ int Audio_SetFormat(uint32_t sample_rate, uint32_t channels, uint32_t bits)
     }
 
     SAI2_SetSampleRateAndBits(sample_rate, bits);
+    SAI2_SetChannels(channels);
 
     current_sample_rate = sample_rate;
     current_channels    = channels;
@@ -66,6 +67,16 @@ int Audio_Play(uint8_t *data, uint32_t size, void (*callback)(void))
     if(Audio_IsBusy())
     {
         return -1;
+    }
+
+    //Update size to transfer DMA size.
+    switch(current_bits)
+    {
+        case 8:  size /= 1; break;
+        case 16: size /= 2; break;
+        case 20: size /= 4; break; //This may not right
+        case 24: size /= 4; break; //This may not right
+        case 32: size /= 4; break;
     }
 
     play_complete_callback = callback;
