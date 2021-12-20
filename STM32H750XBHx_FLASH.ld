@@ -94,6 +94,10 @@ SECTIONS
     KEEP (*(.init))
     KEEP (*(.fini))
 
+    _shell_command_start = .; /* letter-shell exported cmds. */
+    KEEP (*(shellCommand))
+    _shell_command_end = .;
+
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
   } >FLASH
