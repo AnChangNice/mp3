@@ -244,6 +244,11 @@ Middlewares/easylogger/src/elog.c \
 Middlewares/easylogger/src/elog_async.c \
 Middlewares/easylogger/src/elog_buf.c \
 Middlewares/easylogger/src/elog_utils.c \
+Middlewares/letter_shell/src/shell.c \
+Middlewares/letter_shell/src/shell_cmd_list.c \
+Middlewares/letter_shell/src/shell_companion.c \
+Middlewares/letter_shell/src/shell_ext.c \
+Middlewares/letter_shell/port/shell_port.c \
 Core/Src/stm32h7xx_it.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_hal_timebase_tim.c \
@@ -385,6 +390,9 @@ C_INCLUDES =  \
 -IMiddlewares/FreeRTOS/include \
 -IMiddlewares/FreeRTOS/portable/GCC/ARM_CM4F \
 -IMiddlewares/easylogger/inc \
+-IMiddlewares/letter_shell \
+-IMiddlewares/letter_shell/src \
+-IMiddlewares/letter_shell/port \
 -ICore/Inc \
 -IDrivers/IC/wm8988 \
 -IDrivers/IC/aw9364 \
