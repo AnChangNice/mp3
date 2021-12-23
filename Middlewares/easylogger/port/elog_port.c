@@ -29,7 +29,7 @@
 #include <elog.h>
 
 #include "usart.h"
-#include "string.h"
+#include <stdio.h>
 
 /**
  * EasyLogger port initialize
@@ -99,7 +99,7 @@ const char *elog_port_get_time(void) {
     
     /* add your code here */
     static char time_str[32];
-    sprintf(time_str, "%d.%d", HAL_GetTick() / 1000, HAL_GetTick() % 1000);
+    sprintf(time_str, "%d.%d", (int)(HAL_GetTick() / 1000), (int)(HAL_GetTick() % 1000));
     return time_str;
 }
 
