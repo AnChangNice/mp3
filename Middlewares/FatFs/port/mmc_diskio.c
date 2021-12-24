@@ -3,13 +3,31 @@
 
 #include "sdmmc.h"
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "elog.h"
+
 static HAL_SD_CardInfoTypeDef sd_info;
+static SemaphoreHandle_t sdmmc_read_semaphore;
+static SemaphoreHandle_t sdmmc_write_semaphore;
 
 int MMC_disk_initialize(void)
 {
     if(HAL_SD_STATE_READY == HAL_SD_GetState(&hsd1))
     {
         (void)HAL_SD_GetCardInfo(&hsd1, &sd_info);
+    }
+
+    sdmmc_read_semaphore = xSemaphoreCreateBinary();
+    if(sdmmc_read_semaphore == NULL)
+    {
+        log_e("sdmmc_read_semaphore create failed!");
+    }
+
+    sdmmc_write_semaphore = xSemaphoreCreateBinary();
+    if(sdmmc_write_semaphore == NULL)
+    {
+        log_e("sdmmc_write_semaphore create failed!");
     }
 
     return MMC_disk_status();
@@ -29,7 +47,18 @@ int MMC_disk_read(uint8_t *buff, uint32_t sector, uint32_t count)
     if(status == HAL_OK)
     {
         //wait read complete.
-        while (HAL_SD_STATE_READY != HAL_SD_GetState(&hsd1));
+        if(taskSCHEDULER_RUNNING != xTaskGetSchedulerState())
+        {
+            while (HAL_SD_STATE_READY != HAL_SD_GetState(&hsd1));
+        }
+        else
+        {
+            if(pdTRUE != xSemaphoreTake(sdmmc_read_semaphore, portMAX_DELAY))
+            {
+                log_e("sdmmc_read_semaphore take failed!");
+                return 1;
+            }
+        }
         return 0; //RES_OK
     }
     
@@ -50,7 +79,19 @@ int MMC_disk_write(uint8_t *buff, uint32_t sector, uint32_t count)
     if(status == HAL_OK)
     {
         //wait read complete.
-        while (HAL_SD_STATE_READY != HAL_SD_GetState(&hsd1));
+        if(taskSCHEDULER_RUNNING != xTaskGetSchedulerState())
+        {
+            while (HAL_SD_STATE_READY != HAL_SD_GetState(&hsd1));
+        }
+        else
+        {
+            if(pdTRUE != xSemaphoreTake(sdmmc_write_semaphore, portMAX_DELAY))
+            {
+                log_e("sdmmc_write_semaphore take failed!");
+                return 1;
+            }
+        }
+        
         return 0; //RES_OK
     }
     
@@ -105,4 +146,26 @@ void MMC_disk_ioctl_erase_blocks(uint32_t start_addr, uint32_t end_addr)
 {
     //FatFs not care about its result.
     (void)HAL_SD_Erase(&hsd1, start_addr, end_addr);
+}
+
+void HAL_SD_TxCpltCallback(SD_HandleTypeDef *hsd)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    if((hsd == &hsd1) && (taskSCHEDULER_RUNNING == xTaskGetSchedulerState()))
+    {
+        xSemaphoreGiveFromISR(sdmmc_write_semaphore, &xHigherPriorityTaskWoken);
+        //portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
+}
+
+void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    if((hsd == &hsd1) && (taskSCHEDULER_RUNNING == xTaskGetSchedulerState()))
+    {
+        xSemaphoreGiveFromISR(sdmmc_read_semaphore, &xHigherPriorityTaskWoken);
+        //portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
 }

@@ -34,6 +34,8 @@
 /* USER CODE BEGIN Includes */
 #include "sdram.h"
 
+#include "app_main.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,6 +112,8 @@ int main(void)
   MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
   SDRAM_Init(); //Init SDRAM before anyother application start.
+
+  app_main();//All apps start here.
 
   /* USER CODE END 2 */
 

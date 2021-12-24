@@ -91,7 +91,7 @@ void shell_port_init(void)
     xReturned = xTaskCreate(
                     shell_task,
                     "shell_task",
-                    512/4,
+                    1024/4,
                     NULL,
                     tskIDLE_PRIORITY+1,
                     &xHandle);
