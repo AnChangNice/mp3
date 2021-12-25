@@ -53,7 +53,11 @@ int Audio_SetFormat(uint32_t sample_rate, uint32_t channels, uint32_t bits)
 
 void Audio_SetVolume(uint8_t vol)
 {
-    (void)WM8988_SetVolume((int)vol);
+    //Here we remaped the vol from 0-100 to 66-100, to improve user experience.
+    int db;
+    vol = (vol <= 100) ? vol : 100;
+    db = (vol != 0) ? (vol/3 + 66) : 0;
+    (void)WM8988_SetVolume(db);
 }
 
 static void (*play_complete_callback)(void);
