@@ -11,7 +11,16 @@ A mp3 player based on ART-Pi
 | 2MB Flash Target  | STM32H743XI                              |
 | Terminal          | Git Bash                                 |
 
-# Cmd
+# Middleware
+| Name              | Link                                         |
+| ------------------|----------------------------------------------|
+| FreeRTOS          | https://github.com/FreeRTOS/FreeRTOS-Kernel  |
+| FatFs             | http://elm-chan.org/fsw/ff/00index_e.html    |
+| letter-shell      | https://github.com/NevermindZZT/letter-shell |
+| EasyLogger        | https://github.com/armink/EasyLogger         |
+| lvgl              | https://github.com/lvgl/lvgl                 |
+
+# Make Cmd
 | Command        | Description                                                   |
 |----------------|---------------------------------------------------------------|
 | make debug     | Optiminization level 0.                                       |
