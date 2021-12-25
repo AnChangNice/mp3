@@ -3,6 +3,7 @@
 #include "ff.h"
 #include "player.h"
 #include "audio.h"
+#include "gui.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -43,6 +44,9 @@ static void app_init_task(void *params)
 
     //Player Init
     Player_Init();
+
+    //Gui init
+    Gui_Init();
 
     //Delect current task.
     vTaskDelete(xTaskGetCurrentTaskHandle());

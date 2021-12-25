@@ -278,7 +278,8 @@ BSP/sdram/sdram.c \
 BSP/audio/audio.c \
 APP/app_main.c \
 APP/player/player.c \
-APP/player/decoder/wav.c
+APP/player/decoder/wav.c \
+APP/gui/gui.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -411,7 +412,8 @@ C_INCLUDES =  \
 -IBSP/audio \
 -IAPP \
 -IAPP/player \
--IAPP/player/decoder
+-IAPP/player/decoder \
+-IAPP/gui
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
