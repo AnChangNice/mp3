@@ -77,3 +77,10 @@ void app_main(void)
     //Start FreeRTOS here.
     vTaskStartScheduler();
 }
+
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
+{
+    portDISABLE_INTERRUPTS();
+    log_e("task :%s overflow id: 0x%08x", xTask, pcTaskName);
+    while (1);
+}

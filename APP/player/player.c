@@ -4,6 +4,7 @@
 #include "audio.h"
 #include "elog.h"
 #include "shell_cmd_group.h"
+#include "ff.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -11,79 +12,94 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-uint8_t audio_buff[2][8*1024];
-WAV wav;
-int ch = 0;
+#define PLAY_STATE_IDLE 0
+#define PLAY_STATE_LOAD 1
+#define PLAY_STATE_SET  2
+#define PLAY_STATE_PLAY 3
+#define PLAY_STATE_HOLD 4
+#define PLAY_STATE_STOP 5
 
-#include "ff.h"
-FIL file;
-UINT readout;
+#define PLAY_TEMP_BUFF_SIZE (8*1024)
 
-#define PLAYER_IDLE 0
-#define PLAYER_SET  1
-#define PLAYER_PLAY 2
-#define PLAYER_HOLD 3
-#define PLAYER_STOP 4
+typedef struct _play_state
+{
+    uint32_t state;
+    uint32_t fs;
+    uint32_t ch;
+    uint32_t bits;
+    uint32_t mpos;
+    uint32_t msize;
+    uint32_t current_seconds;
+    uint32_t total_seconds;
+    uint32_t buff_index;
+    FIL      file;
+    uint32_t fpos;
+    uint8_t  buff[2][PLAY_TEMP_BUFF_SIZE];
+} Play_State_t;
+static Play_State_t play;
 
-static char music_path[64];
-static int  player_state = PLAYER_IDLE;
+static char path_buff[64];
 
 static void player_task(void *params)
 {
     FRESULT res;
+    UINT readout;
+
+    play.state == PLAY_STATE_IDLE;
 
     res = f_chdir("1:");
 
     while(1)
     {
-        if(player_state == PLAYER_IDLE)
+        if(play.state == PLAY_STATE_IDLE || (play.state == PLAY_STATE_HOLD))
         {
             vTaskDelay(100/portTICK_PERIOD_MS);
         }
-        if(player_state == PLAYER_SET)
+        if(play.state == PLAY_STATE_LOAD)
         {
-            res = f_open(&file, music_path, FA_READ);
-            if(res != FR_OK)
+            if(0 != Player_Load(path_buff))
             {
-                log_e("open: %s failed with code %d", music_path, (int)res);
-                player_state = PLAYER_IDLE;
+                log_e("load: %s failed", path_buff);
             }
-            else
-            {
-                readWavInfo(&wav, &file);
-                Audio_SetFormat(wav.SampleRate, wav.NumChannels, wav.BitsPerSample);
-                log_i("wav fs:%d, ch:%d, bits:%d", wav.SampleRate, wav.NumChannels, wav.BitsPerSample);
-                player_state = PLAYER_PLAY;
-            }
+            play.state = PLAY_STATE_IDLE;
         }
-        if(player_state == PLAYER_PLAY)
+        if(play.state == PLAY_STATE_SET)
         {
-            res = f_read(&file, &audio_buff[ch][0], 8*1024, &readout);
+            //Move file read pointer to right pos for setting seconds.
+            res = f_lseek(&play.file, play.fpos + play.mpos);
+            play.state = PLAY_STATE_IDLE;
+        }
+        if(play.state == PLAY_STATE_PLAY)
+        {
+            res = f_read(&play.file, &play.buff[play.buff_index][0], PLAY_TEMP_BUFF_SIZE, &readout);
+            play.mpos += readout;
+            play.current_seconds = play.mpos / (play.fs * (play.bits / 8) * play.ch);
+
             if(res != FR_OK)
             {
                 log_e("read: failed with code %d", (int)res);
-                player_state = PLAYER_STOP;
+                play.state = PLAY_STATE_STOP;
             }
             else
             {
                 while(Audio_IsBusy());
                 
-                if(0 != Audio_Play(&audio_buff[ch][0], readout, NULL))
+                if(0 != Audio_Play(&play.buff[play.buff_index][0], readout, NULL))
                 {
-                    log_e("play: failed at ch %d when readout %d bytes", ch, readout);
-                    player_state = PLAYER_STOP;
+                    log_e("play: failed at ch %d when readout %d bytes", play.buff_index, readout);
+                    play.state = PLAY_STATE_STOP;
                 }
 
-                ch = (ch == 0) ? 1 : 0;
-                if(readout < 8*1024)
+                play.buff_index = (play.buff_index == 0) ? 1 : 0;
+                if(readout < PLAY_TEMP_BUFF_SIZE)
                 {
-                    player_state = PLAYER_STOP;
+                    play.state = PLAY_STATE_STOP;
                 }
             }
         }
-        if(player_state == PLAYER_STOP)
+        if(play.state == PLAY_STATE_STOP)
         {
-            res = f_close(&file);
+            res = f_close(&play.file);
             if(res != FR_OK)
             {
                 log_e("close: failed!");
@@ -92,7 +108,7 @@ static void player_task(void *params)
             {
                 log_i("play: stoped!");
             }
-            player_state = PLAYER_IDLE;
+            play.state = PLAY_STATE_IDLE;
         }
     }
 }
@@ -117,6 +133,71 @@ void Player_Init(void)
     }
 }
 
+int Player_Load(char *path)
+{
+    FRESULT res;
+    WAV wav;
+
+    if((play.state == PLAY_STATE_PLAY) || (play.state == PLAY_STATE_HOLD))
+    {
+        return -1;
+    }
+
+    res = f_open(&play.file, path, FA_READ);
+    if(res != FR_OK)
+    {
+        log_e("Load file: %s faild!", path);
+        return -1;
+    }
+
+    readWavInfo(&wav, &play.file);
+
+    play.fpos = f_tell(&play.file); //Get where the music data start.
+
+    play.fs   = wav.SampleRate;
+    play.bits = wav.BitsPerSample;
+    play.ch   = wav.NumChannels;
+    play.msize = wav.ChunkSize;
+    play.mpos  = 0;
+    play.total_seconds = play.msize / (play.fs * (play.bits / 8) * play.ch);
+    play.current_seconds = 0;
+
+    Audio_SetFormat(play.fs, play.ch, play.bits);
+
+    return 0;
+}
+
+void Player_Start(void)
+{
+    play.state = PLAY_STATE_PLAY;
+}
+void Player_Hold(void)
+{
+    play.state = PLAY_STATE_HOLD;
+}
+void Player_Stop(void)
+{
+    play.state = PLAY_STATE_STOP;
+}
+
+int Player_GetTotalSeconds(void)
+{
+    return (int)play.total_seconds;
+}
+int Player_GetCurrentSeconds(void)
+{
+    return (int)play.current_seconds;
+}
+int Player_SetToSeconds(int seconds)
+{
+    play.current_seconds = seconds;
+    play.mpos = seconds * (play.fs * (play.bits / 8) * play.ch);
+    
+    play.state = PLAY_STATE_SET;
+
+    return 0;
+}
+
 static int player_list_music(int argc, char *argv[])
 {
     FRESULT res;
@@ -138,17 +219,14 @@ static int player_list_music(int argc, char *argv[])
 
 static int player_play_music(int argc, char *argv[])
 {
-    strcpy(music_path, argv[1]);
-    player_state = PLAYER_SET;
+    strcpy(path_buff, argv[1]);
+    play.state = PLAY_STATE_LOAD;
     return 0;
 }
 
 static int player_stop_music(int argc, char *argv[])
 {
-    if(player_state != PLAYER_IDLE)
-    {
-        player_state = PLAYER_STOP;
-    }
+    Player_Stop();
     return 0;
 }
 
